@@ -1,0 +1,29 @@
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.backends import default_backend
+import os
+
+key = os.urandom(16)
+iv = bytes([0]*16)
+
+X = b"MessageBlock123"  # 16 bytes
+
+padder = padding.PKCS7(128).padder()
+X_padded = padder.update(X) + padder.finalize()
+
+cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend()).encryptor()
+T = cipher.update(X_padded) + cipher.finalize()
+T = T[-16:]
+
+X_xor_T = bytes([a ^ b for a, b in zip(X, T)])
+full_msg = X + X_xor_T
+
+padder2 = padding.PKCS7(128).padder()
+msg_padded = padder2.update(full_msg) + padder2.finalize()
+
+cipher2 = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend()).encryptor()
+forged_mac = cipher2.update(msg_padded) + cipher2.finalize()
+forged_mac = forged_mac[-16:]
+
+print("MAC T for X:", T.hex())
+print("Forged MAC for X||(X⊕T):", forged_mac.hex())

@@ -1,0 +1,20 @@
+from collections import Counter
+
+cipher = """53‡‡†305))6*;4826)4‡.)4‡);806*;48†8¶60))85;;]8*;:‡*8†83
+(88)5*†;46(;88*96*?;8)*‡(;485);5*†2:*‡(;4956*2(5*—4)8¶8*
+;4069285);)6†8)4‡‡;1(‡9;48081;8:8‡1;48†85;4)485†528806*81 (‡9;48;(88;4(‡?34;48)4‡;161;:188;‡?;"""
+
+# Frequency analysis
+print("Frequencies:", Counter(cipher))
+
+# Substitution guesses (add or modify as you go)
+subs = {
+    '‡': 'T', '†': 'E', '8': 'A', '5': 'H', '4': 'I',
+    '0': 'L', '6': 'O', ')': 'N', '*': 'D', ';': 'S',
+    '3': 'E', '¶': 'R', '(': 'C', '9': 'U', '2': 'Y',
+    ':': 'B', '?': '.', '.': 'M', '—': 'W', ']': 'G',
+    '1': 'F'
+}
+
+# Decrypt and print
+print("\nDecryption:\n", ''.join(subs.get(c, c) for c in cipher))

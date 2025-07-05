@@ -1,0 +1,30 @@
+# 56-bit initial key as binary string (you can modify this)
+initial_key = "0001001100110100010"
+
+# Split into left and right 28-bit halves
+left = initial_key[:28]
+right = initial_key[28:]
+
+# Shift schedule for 16 rounds (standard DES shift table)
+shifts = [1, 1, 2, 2, 2, 2, 2, 2,
+          1, 2, 2, 2, 2, 2, 2, 1]
+
+# Store subkeys
+subkeys = []
+
+for round_num in range(5):
+    # Perform left circular shifts
+    left = left[shifts[round_num]:] + left[:shifts[round_num]]
+    right = right[shifts[round_num]:] + right[:shifts[round_num]]
+
+    # Select first 24 bits from each half
+    left_24 = left[:24]
+    right_24 = right[:24]
+
+    # Combine to get 48-bit subkey
+    subkey = left_24 + right_24
+    subkeys.append(subkey)
+
+# Print all 16 subkeys
+for i, key in enumerate(subkeys):
+    print(f"Round {i+1}: {key}")

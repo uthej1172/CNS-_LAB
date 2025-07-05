@@ -1,0 +1,13 @@
+msg = "MEET ME AT THE USUAL PLACE AT TEN RATHER THAN EIGHT OCLOCK".replace(" ", "").upper()
+if len(msg) % 2: msg += 'X'
+pt = [ord(c) - 65 for c in msg]
+key = [[9, 4], [5, 7]]
+ct, i = [], 0
+while i < len(pt):
+    x = pt[i]
+    y = pt[i+1]
+    ct.append((key[0][0]*x + key[0][1]*y) % 26)
+    ct.append((key[1][0]*x + key[1][1]*y) % 26)
+    i += 2
+text = ''.join(chr(n + 65) for n in ct)
+print(text)

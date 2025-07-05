@@ -1,0 +1,32 @@
+# Test values from spec
+key = "0111111101"          # 10-bit S-DES key
+iv =  "10101010"            # 8-bit IV
+pt1 = "00000001"            # first block
+pt2 = "00100011"            # second block
+
+# CBC ENCRYPTION
+# XOR pt1 with IV
+xored1 = ''.join('1' if iv[i] != pt1[i] else '0' for i in range(8))
+
+# Fake S-DES encrypt (for illustration): reverse bits, XOR with key bits 0–7
+ct1 = ''.join('1' if xored1[::-1][i] != key[i] else '0' for i in range(8))
+
+# XOR pt2 with ct1
+xored2 = ''.join('1' if pt2[i] != ct1[i] else '0' for i in range(8))
+ct2 = ''.join('1' if xored2[::-1][i] != key[i] else '0' for i in range(8))
+
+print("CBC Encryption Output:")
+print("C1:", ct1)
+print("C2:", ct2)
+
+# CBC DECRYPTION
+# Fake decrypt ct1: reverse process — XOR with key, then reverse
+tmp1 = ''.join('1' if ct1[i] != key[i] else '0' for i in range(8))
+pt1_decrypted = ''.join('1' if tmp1[::-1][i] != iv[i] else '0' for i in range(8))
+
+tmp2 = ''.join('1' if ct2[i] != key[i] else '0' for i in range(8))
+pt2_decrypted = ''.join('1' if tmp2[::-1][i] != ct1[i] else '0' for i in range(8))
+
+print("\nCBC Decryption Output:")
+print("P1:", pt1_decrypted)
+print("P2:", pt2_decrypted)

@@ -1,0 +1,41 @@
+# S-DES-CTR Mode (simplified encryption logic)
+
+# Inputs
+key = "0111111101"
+counter_start = "00000000"
+plaintext_blocks = ["00000001", "00000010", "00000100"]
+
+# Simulated S-DES encryption: reverse counter bits, XOR with key bits 0–7
+# Store ciphertexts
+ciphertexts = []
+
+counter = int(counter_start, 2)
+
+for pt in plaintext_blocks:
+    # Convert counter to 8-bit binary
+    ctr_bin = format(counter, '08b')
+    
+    # Fake S-DES encryption of counter
+    reversed_ctr = ctr_bin[::-1]
+    sdes_ctr = ''.join('1' if reversed_ctr[i] != key[i] else '0' for i in range(8))
+    
+    # XOR encrypted counter with plaintext block
+    ct = ''.join('1' if sdes_ctr[i] != pt[i] else '0' for i in range(8))
+    ciphertexts.append(ct)
+    
+    counter += 1
+
+print("CTR Encryption Output:")
+for c in ciphertexts:
+    print(c)
+
+# Decryption: Same steps — encrypt counter, XOR with ciphertext
+print("\nCTR Decryption Output:")
+counter = int(counter_start, 2)
+for ct in ciphertexts:
+    ctr_bin = format(counter, '08b')
+    reversed_ctr = ctr_bin[::-1]
+    sdes_ctr = ''.join('1' if reversed_ctr[i] != key[i] else '0' for i in range(8))
+    pt = ''.join('1' if sdes_ctr[i] != ct[i] else '0' for i in range(8))
+    print(pt)
+    counter += 1

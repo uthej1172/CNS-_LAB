@@ -1,0 +1,9 @@
+p = 13
+q = 17
+n = p * q
+e = 5
+
+m = 13  # plaintext block has common factor with n
+import math
+g = math.gcd(m, n)
+print("Common factor revealed:", g)  # Helps factor n!

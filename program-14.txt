@@ -1,0 +1,27 @@
+# Part (a) Encryption
+plaintext = "send more money".replace(" ", "").upper()
+key_stream = [9, 0, 1, 7, 23, 15, 21, 14, 11, 11, 2, 8, 9]
+
+# Encrypt
+ciphertext = ""
+for i in range(len(plaintext)):
+    p = ord(plaintext[i]) - 65
+    k = key_stream[i]
+    c = (p + k) % 26
+    ciphertext += chr(c + 65)
+
+print("Encrypted (a):", ciphertext)
+
+# Part (b) Key Recovery
+new_plain = "cashnotneeded".replace(" ", "").upper()
+new_cipher = ciphertext  # Reuse from part (a), assuming matched length
+
+# Recover key
+recovered_key = []
+for i in range(len(new_plain)):
+    c = ord(new_cipher[i]) - 65
+    p = ord(new_plain[i]) - 65
+    k = (c - p) % 26
+    recovered_key.append(k)
+
+print("Recovered Key (b):", recovered_key)

@@ -1,0 +1,11 @@
+keyword = "CIPHER"
+keyword = ''.join(sorted(set(keyword), key=keyword.index))  # Remove duplicates, preserve order
+
+# Generate cipher alphabet
+import string
+alphabet = string.ascii_uppercase
+cipher_alphabet = keyword + ''.join([ch for ch in alphabet if ch not in keyword])
+
+# Display mapping
+print("Plain : ", ' '.join(alphabet))
+print("Cipher: ", ' '.join(cipher_alphabet))

@@ -1,0 +1,17 @@
+p = 11
+q = 19
+n = p * q
+phi = (p - 1) * (q - 1)  # phi = 180
+
+# Choose e1 such that gcd(e1, phi) == 1
+e1 = 7  # 7 is coprime with 180
+d1 = pow(e1, -1, phi)
+
+# Simulate key regeneration
+e2 = 11  # Also coprime with 180
+d2 = pow(e2, -1, phi)
+
+print("Original public key e1:", e1)
+print("Original private key d1:", d1)
+print("New public key e2:", e2)
+print("New private key d2:", d2)

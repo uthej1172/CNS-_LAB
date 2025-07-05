@@ -1,0 +1,19 @@
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import padding
+import os
+
+# Plaintext and key/IV
+data = b"Secret message!"
+key = os.urandom(24)
+iv = os.urandom(8)
+
+# Padding
+padder = padding.PKCS7(64).padder()
+padded = padder.update(data) + padder.finalize()
+
+# 3DES CBC encryption
+cipher = Cipher(algorithms.TripleDES(key), modes.CBC(iv))
+ct = cipher.encryptor().update(padded) + cipher.encryptor().finalize()
+
+# Output
+print("Ciphertext (hex):", ct.hex())

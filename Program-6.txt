@@ -1,0 +1,27 @@
+# Affine Cipher Breaker using frequency analysis
+ciphertext = "B...U..."  # Replace with your actual ciphertext
+
+# Assume 'B' maps to 'E' and 'U' maps to 'T'
+p1 = ord('E') - ord('A')
+p2 = ord('T') - ord('A')
+c1 = ord('B') - ord('A')
+c2 = ord('U') - ord('A')
+
+for a in range(1, 26):
+    try:
+        a_inv = pow(a, -1, 26)
+        b1 = (c1 - a * p1) % 26
+        b2 = (c2 - a * p2) % 26
+        if b1 == b2:
+            print("Trying keys: a =", a, ", b =", b1)
+            decrypted = ""
+            for ch in ciphertext:
+                if ch.isalpha():
+                    y = ord(ch.upper()) - ord('A')
+                    x = (a_inv * (y - b1)) % 26
+                    decrypted += chr(x + ord('A'))
+                else:
+                    decrypted += ch
+            print("Decrypted:", decrypted)
+    except ValueError:
+        continue

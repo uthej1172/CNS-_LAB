@@ -1,0 +1,53 @@
+cipher = """KXJEY UREBE ZWEHE WRYTU HEYFS
+KREHE GOYFI WTTTU OLKSY CAJPO
+BOTEI ZONTX BYBNT GONEY CUZWR
+GDSON SXBOU YWRHE BAAHY USEDQ""".replace(" ", "").replace("\n", "")
+
+keyword = "MONARCHY".upper().replace('J', 'I')
+matrix = []
+used = []
+
+# Build 5x5 matrix from keyword
+for ch in keyword:
+    if ch not in used and ch.isalpha():
+        matrix.append(ch)
+        used.append(ch)
+for ch in "ABCDEFGHIKLMNOPQRSTUVWXYZ":
+    if ch not in used:
+        matrix.append(ch)
+        used.append(ch)
+
+# Turn into 5x5 grid
+grid = [matrix[i:i+5] for i in range(0, 25, 5)]
+
+# Decrypt pairs
+plaintext = ""
+i = 0
+while i < len(cipher):
+    a = cipher[i]
+    b = cipher[i + 1]
+
+    # Locate positions
+    for r1 in range(5):
+        for c1 in range(5):
+            if grid[r1][c1] == a:
+                row1, col1 = r1, c1
+    for r2 in range(5):
+        for c2 in range(5):
+            if grid[r2][c2] == b:
+                row2, col2 = r2, c2
+
+    # Apply Playfair rules
+    if row1 == row2:
+        plaintext += grid[row1][(col1 - 1) % 5]
+        plaintext += grid[row2][(col2 - 1) % 5]
+    elif col1 == col2:
+        plaintext += grid[(row1 - 1) % 5][col1]
+        plaintext += grid[(row2 - 1) % 5][col2]
+    else:
+        plaintext += grid[row1][col2]
+        plaintext += grid[row2][col1]
+
+    i += 2
+
+print("Decrypted Message:\n", plaintext)

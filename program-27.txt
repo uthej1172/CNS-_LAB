@@ -1,0 +1,7 @@
+e = 7
+n = 2537
+text = "HELLO"
+for c in text:
+    m = ord(c) - ord('A')  # 0 to 25
+    ciph = pow(m, e, n)
+    print(c, "->", ciph)

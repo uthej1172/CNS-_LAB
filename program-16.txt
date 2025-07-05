@@ -1,0 +1,48 @@
+# Ciphertext input
+ciphertext = input("Enter ciphertext: ").upper()
+top_n = int(input("Number of top guesses to display: "))
+
+# Standard English letter frequency (most to least frequent)
+english_freq_order = 'ETAOINSHRDLCUMWFGYPBVKJXQZ'
+
+# Count letter frequencies in ciphertext
+letter_counts = {}
+for ch in ciphertext:
+    if ch.isalpha():
+        letter_counts[ch] = letter_counts.get(ch, 0) + 1
+
+# Sort cipher letters by frequency (most to least frequent)
+sorted_cipher_letters = sorted(letter_counts.items(), key=lambda x: x[1], reverse=True)
+cipher_freq_order = ''.join([pair[0] for pair in sorted_cipher_letters])
+
+# Generate mapping guesses by matching freq order
+import itertools
+
+# Generate permutations of least frequent unused letters to inject variation
+permuted_segments = list(itertools.permutations(english_freq_order[10:], len(cipher_freq_order[10:])))
+results = []
+
+# Create top_n probable plaintext guesses
+for i in range(min(top_n, len(permuted_segments))):
+    mapping = {}
+    for j in range(10):  # Keep top 10 letter guesses fixed
+        mapping[cipher_freq_order[j]] = english_freq_order[j]
+    for j in range(10, len(cipher_freq_order)):
+        mapping[cipher_freq_order[j]] = permuted_segments[i][j - 10]
+    
+    # Decrypt the message using the current mapping
+    plaintext = ''
+    for ch in ciphertext:
+        if ch.isalpha():
+            mapped = mapping.get(ch.upper(), '?')
+            if ch.islower():
+                plaintext += mapped.lower()
+            else:
+                plaintext += mapped
+        else:
+            plaintext += ch
+    results.append((i+1, plaintext))
+
+# Print all guesses
+for idx, guess in results:
+    print(f"\n[Guess {idx}]:\n{guess}")

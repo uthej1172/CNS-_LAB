@@ -1,0 +1,35 @@
+# Public key
+e = 31
+n = 3599
+
+# Step 1: Find p and q (trial and error)
+for i in range(2, n):
+    if n % i == 0:
+        p = i
+        q = n // i
+        break
+
+print("p =", p, "q =", q)
+
+# Step 2: Compute φ(n)
+phi = (p - 1) * (q - 1)
+
+# Step 3: Extended Euclidean Algorithm to find d (modular inverse of e mod phi)
+a, b = e, phi
+x0, x1 = 1, 0
+while b != 0:
+    q = a // b
+    a, b = b, a % b
+    x0, x1 = x1, x0 - q * x1
+d = x0 % phi
+
+print("Private key d =", d)
+
+# Step 4: Encrypt message M
+M = 42  # sample message
+C = pow(M, e, n)
+print("Encrypted C =", C)
+
+# Step 5: Decrypt
+decrypted = pow(C, d, n)
+print("Decrypted M =", decrypted)

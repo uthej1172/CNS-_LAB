@@ -1,0 +1,31 @@
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import padding
+import os
+
+# Plaintext (must be a multiple of 8 after padding)
+data = b"HELLO BLOCK MODE DEMO"
+
+# Create key
+key = os.urandom(8)  # DES key = 8 bytes
+
+# Pad plaintext
+padder = padding.PKCS7(64).padder()
+padded = padder.update(data) + padder.finalize()
+
+# Encrypt using ECB mode
+cipher = Cipher(algorithms.TripleDES(key), modes.ECB())
+encryptor = cipher.encryptor()
+ciphertext = encryptor.update(padded) + encryptor.finalize()
+
+# Simulate transmission error: flip a bit in one ciphertext block
+corrupted = bytearray(ciphertext)
+corrupted[8] ^= 0b00010000  # Flip a bit in 2nd block
+corrupted = bytes(corrupted)
+
+# Decrypt with corrupted block
+decryptor = cipher.decryptor()
+decrypted = decryptor.update(corrupted) + decryptor.finalize()
+
+print("Original Plaintext :", data)
+print("Ciphertext (hex)   :", ciphertext.hex())
+print("Decrypted (corrupt):", decrypted)

@@ -1,0 +1,43 @@
+from collections import Counter
+
+# Standard letter frequencies in English
+english_freq = {
+    'E': 12.7, 'T': 9.1, 'A': 8.2, 'O': 7.5, 'I': 7.0,
+    'N': 6.7, 'S': 6.3, 'H': 6.1, 'R': 6.0, 'D': 4.3,
+    'L': 4.0, 'C': 2.8, 'U': 2.8, 'M': 2.4, 'W': 2.4,
+    'F': 2.2, 'G': 2.0, 'Y': 2.0, 'P': 1.9, 'B': 1.5,
+    'V': 1.0, 'K': 0.8, 'J': 0.2, 'X': 0.2, 'Q': 0.1, 'Z': 0.1
+}
+
+# User input
+ciphertext = input("Enter the ciphertext: ").upper()
+top_n = int(input("How many top plaintexts to show? "))
+
+candidates = []
+
+for shift in range(26):
+    # Decrypt using additive cipher (Caesar shift)
+    decrypted = ""
+    for ch in ciphertext:
+        if ch.isalpha():
+            decrypted += chr((ord(ch) - 65 - shift) % 26 + 65)
+        else:
+            decrypted += ch
+
+    # Frequency score
+    freq = Counter(decrypted)
+    total = sum(freq[ch] for ch in freq if ch.isalpha())
+    score = 0
+    for ch in english_freq:
+        observed = freq.get(ch, 0) * 100 / total if total else 0
+        score += abs(english_freq[ch] - observed)
+    candidates.append((score, shift, decrypted))
+
+# Sort by score (lower = better match)
+candidates.sort()
+
+# Show top N guesses
+print(f"\nTop {top_n} most likely plaintexts:\n")
+for i in range(top_n):
+    score, shift, text = candidates[i]
+    print(f"Shift {shift:2}: {text}")
